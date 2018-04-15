@@ -1,0 +1,87 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}User profile{% endblock %}
+
+{% block body %}
+    <h1 class="display-4">{{ user.firstName }} {{ user.surname }} Profile</h1>
+    <div class="row">
+
+        <div class="col col-lg-3">
+            <br>
+            <img src="/uploads/images/profile.png" alt="{{ user.firstName }} {{ user.surname }}" width="150" height="200">
+        </div>
+        <div class="col col-lg-9">
+            <div class="row"><p></p></div>
+            <div class="row">
+                <p class="lead"><b>ID: </b>{{ user.id }}</p>
+            </div>
+            <div class="row">
+                <p class="lead"><b>First name: </b>{{ user.firstName }}</p>
+            </div>
+            <div class="row">
+                <p class="lead"><b>Surname: </b>{{ user.surname }}</p>
+            </div>
+            <div class="row">
+                <p class="lead"><b>Username: </b>{{ user.username}}</p>
+            </div>
+            <div class="row">
+                {% for role in user.roles %}
+                <p class="lead"><b>Role: </b>{{ role }}</p>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    <div class="row">
+    {% if is_granted('ROLE_ADMIN') %}
+        <a href="{{ path('user_index') }}" class="btn btn-outline-info" style="margin-right: 1%">Back to User List</a>
+    {% else %}
+        <a href="{{ path('recipe_index') }}" class="btn btn-outline-info" style="margin-right: 1%">Back to Drinks</a>
+    {% endif %}
+    <a href="{{ path('user_edit', {'id': user.id}) }}" class="btn btn-outline-secondary" style="margin-right: 1%">Edit User Account</a>
+
+    {% include 'user/_delete_form.html.twig' with {'identifier': user.id} only %}
+    </div>
+    <br>
+    {% if is_granted('ROLE_ADMIN') %}
+        <hr>
+        <h1 class="display-4">Public Requests</h1>
+        <hr>
+        <h5>For Drinks</h5>
+        {% for recipe in recipes %}
+            {% if recipe.requestRecipePublic == true and recipe.isPublic == false %}
+                <div class="row">
+                    <div class="col-lg-5">
+                    <p class="lead"><a href="{{ url('recipe_show', {'id':recipe.id}) }}"> {{ recipe.title}}</a></p>
+                    </div>
+                    <div class="col-lg-4">
+                        <p class="lead"><b>Author: </b>{{ recipe.author.firstName}} {{ recipe.author.surname}}</p>
+                    </div>
+                <div class="col-sm-3">
+                    <a href="{{ path('recipe_publish_recipe', {'id': recipe.id }) }}" class="btn btn-info">Accept</a>
+                    <a href="{{ path('recipe_reject_recipe', {'id': recipe.id }) }}" class="btn btn-warning">Reject</a>
+                </div>
+                </div>
+            {% endif %}
+        {% endfor %}
+        <hr>
+        <h5>For Reviews</h5>
+        {% for review in reviews %}
+            {% if review.requestReviewPublic == true and review.isPublicReview == false %}
+                <div class="row">
+                    <div class="col-lg-5">
+                        <p class="lead"><a href="{{ url('review_show', {'id':review.id}) }}"> {{ review.summary}}</a></p>
+                    </div>
+                    <div class="col-lg-4">
+                        <p class="lead"><b>Author: </b>{{ review.author.firstName}} {{ review.author.surname}}</p>
+                    </div>
+                    <div class="col-sm-3">
+                        <a href="{{ path('review_publish_review', {'id': review.id }) }}" class="btn btn-info">Accept</a>
+                        <a href="{{ path('review_reject_review', {'id': review.id }) }}" class="btn btn-warning">Reject</a>
+                    </div>
+                </div>
+            {% endif %}
+        {% endfor %}
+    {% else %}
+
+    {% endif %}
+{% endblock %}
