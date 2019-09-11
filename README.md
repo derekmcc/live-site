@@ -1,6 +1,7 @@
 # Rum Reviews website
 
 A website for different types of Rum's with reviews for the Rum. Built using a Symfony 4 framework.
+The website can be viewed at following url: http://live-site.herokuapp.com/
 
 ## Releases
 [Release Version 6.0 - Final Version](https://github.com/derekmcc/webFrameWorksTest/releases/tag/v6.0)
